@@ -73,7 +73,7 @@ public abstract class AbstractChatHandler {
             return;
         }
 
-        final String group = user.getGroup();
+        String group = user.getGroup();
         final String world = user.getWorld().getName();
         final String username = user.getName();
         final String nickname = user.getFormattedNickname();
@@ -83,6 +83,18 @@ public abstract class AbstractChatHandler {
         final String suffix = FormatUtil.replaceFormat(ess.getPermissionsHandler().getSuffix(player));
         final Team team = player.getScoreboard().getPlayerTeam(player);
 
+        if (chat.getRadius() > 0 && event.getMessage().length() > 0) {
+            if (chat.getType().isEmpty()) {
+                if (user.isToggleShout() && event.getMessage().charAt(0) == ess.getSettings().getChatShout()) {
+                    group = "shout";
+                }
+
+            } else {
+                if (event.getMessage().charAt(0) == ess.getSettings().getChatShout()) {
+                    group = "shout";
+                }
+            }
+        }
         String format = ess.getSettings().getChatFormat(group);
         format = format.replace("{0}", group);
         format = format.replace("{1}", ess.getSettings().getWorldAlias(world));
